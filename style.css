@@ -1,0 +1,135 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #aaa;
+  text-align: center;
+}
+
+.abc {
+  width: 10%;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+input[type="text"],
+input[type="number"]{
+  width: 100%;
+  border: none;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+input[type="date"] {
+  width: 20%;
+  border: none;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.total {
+  text-align: right;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 24px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Header Centering Styles */
+.header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.company-header {
+  width: 100%;
+  max-width: 800px;
+}
+
+.company-details {
+  margin-bottom: 10px;
+}
+
+.company-name {
+  cursor: pointer;
+}
+
+.contact-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  margin: 1px 6px;
+}
+
+.email-link .highlight {
+  display: inline-block;
+  transform: translateY(-2px);
+  color: #000;
+}
+
+.address {
+  margin-bottom: 10px;
+  color: black;
+}
+
+.tagline {
+  color: black;
+}
+
+/* Smooth Fade */
+.fadeable {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Prevent these from showing in print */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

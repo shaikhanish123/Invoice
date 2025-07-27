@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header-container" id="invoiceContent">
+  <div class="company-header">
+    <div class="company-details">
+      <h1 class="company-name">PRANJALI <span class="highlight">ELECTRICAL</span> SOLUTIONS</h1>
+      <p class="tagline">Electrical Engineers, Contractors</p>
+      <p class="address">Dhende Chal, Shop 7, Dr. Ambedkar Road, Thane (West) - 400601</p>
+
+      <p class="contact-info">
+        <img src="https://img.icons8.com/color/20/000000/whatsapp.png" alt="WhatsApp" />
+        <span class="highlight">WhatsApp: +91 9473840398</span>
+      </p>
+
+      <p class="contact-info">
+        <a href="mailto:rmishra72278@gmail.com" class="email-link">
+          <span class="highlight">Email: rmishra72278@gmail.com</span>
+        </a>
+      </p>
+    </div>
+
+    <div class="date-section">
+      <label for="customDate"><strong>Date:</strong></label>
+      <input type="date" id="customDate" required />
+    </div>
+  </div>
+
+  <div class="subject-section">
+    <p><strong>Subject:</strong> Agreed labour rates for electrical works as per standards for the new project site are as follows</p>
+  </div>
+</div>
+
+<h2>Invoice Generator</h2>
+
+<form id="billForm">
+  <table id="billTable">
+    <thead>
+      <tr>
+        <th class="abc">S.No</th>
+        <th>Description of Work</th>
+        <th class="abc">Rate</th>
+        <th class="abc">Per</th>
+        <th class="abc">Amount</th>
+        <th class="abc no-print">Action</th>
+      </tr>
+    </thead>
+    <tbody id="billBody">
+      <tr>
+        <td>1</td>
+        <td><input type="text" name="desc[]" required></td>
+        <td><input type="number" name="rate[]" oninput="calculateAmount(this)" required></td>
+        <td><input type="number" name="per[]" oninput="calculateAmount(this)" required></td>
+        <td><input type="number" name="amount[]" readonly></td>
+        <td class="no-print">
+          <button type="button" class="btn delete-btn fadeable" onclick="deleteRow(this)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="button-group no-print">
+    <button type="button" class="btn fadeable" onclick="addRow()">Add Row</button>
+    <button type="button" class="btn fadeable" onclick="generatePDF()">Save as PDF</button>
+  </div>
+
+  <div class="total-section">
+    <div class="total">SUB-TOTAL: ₹ <span id="totalAmount">0.00</span></div>
+  </div>
+</form>
+
+<!-- ✅ PDF Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  function addRow() {
+    const table = document.getElementById('billBody');
+    const rowCount = table.rows.length;
+    const row = table.insertRow();
+    row.innerHTML = `
+      <td>${rowCount + 1}</td>
+      <td><input type="text" name="desc[]" required></td>
+      <td><input type="number" name="rate[]" oninput="calculateAmount(this)" required></td>
+      <td><input type="number" name="per[]" oninput="calculateAmount(this)" required></td>
+      <td><input type="number" name="amount[]" readonly></td>
+      <td class="no-print">
+        <button type="button" class="btn delete-btn fadeable" onclick="deleteRow(this)">Delete</button>
+      </td>
+    `;
+  }
+
+  function calculateAmount(input) {
+    const row = input.closest('tr');
+    const rate = parseFloat(row.querySelector('input[name="rate[]"]').value) || 0;
+    const per = parseFloat(row.querySelector('input[name="per[]"]').value) || 0;
+    const amountInput = row.querySelector('input[name="amount[]"]');
+    const amount = rate * per;
+    amountInput.value = amount.toFixed(2);
+    updateTotal();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    document.querySelectorAll('input[name="amount[]"]').forEach(input => {
+      total += parseFloat(input.value) || 0;
+    });
+    document.getElementById('totalAmount').textContent = total.toFixed(2);
+  }
+
+  function deleteRow(button) {
+    const row = button.closest('tr');
+    row.remove();
+    updateTotal();
+    updateSerialNumbers();
+  }
+
+  function updateSerialNumbers() {
+    const rows = document.querySelectorAll('#billBody tr');
+    rows.forEach((row, index) => {
+      row.cells[0].textContent = index + 1;
+    });
+  }
+
+  function generatePDF() {
+    const fadeables = document.querySelectorAll('.fadeable');
+
+    // Add fade-out class for transition
+    fadeables.forEach(el => el.classList.add('fade-out'));
+
+    // After fade-out animation completes
+    setTimeout(() => {
+      fadeables.forEach(el => el.style.display = 'none');
+
+      const opt = {
+        margin: 0.5,
+        filename: 'Bill_Generator.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(document.body).save().then(() => {
+        // Reset after generating PDF
+        fadeables.forEach(el => {
+          el.style.display = '';
+          el.classList.remove('fade-out');
+        });
+      });
+    }, 500); // Wait for fade-out to finish
+  }
+</script>
+
+</body>
+</html>
